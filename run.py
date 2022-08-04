@@ -29,6 +29,8 @@ if __name__ == '__main__':
                              'default=0x0, Recommends : 432x368 or 656x368 or 1312x736 ')
     parser.add_argument('--resize-out-ratio', type=float, default=4.0,
                         help='if provided, resize heatmaps before they are post-processed. default=1.0')
+    parser.add_argument('--output_json', type=str, default='/tmp/', help='writing output json dir') #追加
+    parser.add_argument('--filename', type=str, default='sampleimage', help='write output files name') #追加
 
     args = parser.parse_args()
 
@@ -50,8 +52,10 @@ if __name__ == '__main__':
 
     logger.info('inference image: %s in %.4f seconds.' % (args.image, elapsed))
 
-    image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
-
+    #image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+    image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False, frame=0, output_json_dir=args.output_json, filename = args.filename) #draw_humansに渡す引数を追加
+    #image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False, output_json_dir=args.output_json) #draw_humansに渡す引数を追加
+    
     try:
         import matplotlib.pyplot as plt
 
@@ -85,7 +89,7 @@ if __name__ == '__main__':
         # plt.imshow(CocoPose.get_bgimg(inp, target_size=(vectmap.shape[1], vectmap.shape[0])), alpha=0.5)
         plt.imshow(tmp2_even, cmap=plt.cm.gray, alpha=0.5)
         plt.colorbar()
-        plt.show()
+        #plt.show()
     except Exception as e:
         logger.warning('matplitlib error, %s' % e)
         cv2.imshow('result', image)

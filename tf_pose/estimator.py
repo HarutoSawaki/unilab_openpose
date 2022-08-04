@@ -1,6 +1,11 @@
 import logging
 import math
 
+#書き足したところ
+import json
+import os
+####
+
 import slidingwindow as sw
 
 import cv2
@@ -405,12 +410,21 @@ class TfPoseEstimator:
         return npimg_q
 
     @staticmethod
-    def draw_humans(npimg, humans, imgcopy=False):
+    def draw_humans(npimg, humans, imgcopy=False, frame=0, output_json_dir=None, filename=None):
         if imgcopy:
             npimg = np.copy(npimg)
         image_h, image_w = npimg.shape[:2]
         centers = {}
+        #追加したところ
+        #json用のリスト追加
+        dc = {"version":1.2, "people":[], "face_keypoints_2d":[], "hand_left_keypoints_2d":[],
+              "hand_right_keypoints_2d":[], "pose_keypoints_3d":[], "face_keypoints_3d":[],
+              "hand_left_keypoints_3d":[], "hand_right_keypoints_3d":[]}
+        ###      
         for human in humans:
+            #追加したところ
+            flat = [0.0 for i in range(54)]
+            ###
             # draw point
             for i in range(common.CocoPart.Background.value):
                 if i not in human.body_parts.keys():
@@ -419,6 +433,15 @@ class TfPoseEstimator:
                 body_part = human.body_parts[i]
                 center = (int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
                 centers[i] = center
+                #追加したところ
+                #flatにx座標、y座標、信頼度を追加
+                #add x
+                flat[i*3] = body_part.x * image_w
+                #add y
+                flat[i*3+1] = body_part.y * image_h
+                #add score
+                flat[i*3+2] = body_part.score
+                ###
                 cv2.circle(npimg, center, 3, common.CocoColors[i], thickness=3, lineType=8, shift=0)
 
             # draw line
@@ -428,6 +451,23 @@ class TfPoseEstimator:
 
                 # npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
                 cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
+
+            #追加したところ
+            #dcリストに追加
+            dc["people"].append({"pose_keypoints_2d" : flat})
+            
+        #jsonに書き出し
+
+        if output_json_dir:
+            #with open(os.path.join(output_json_dir, '{0}_keypoints.json'.format(str(frame).zfill(4))), 'w') as outfile:  
+            with open(os.path.join(output_json_dir, '{0}_keypoints.json'.format(filename)), 'w') as outfile:   
+                json.dump(dc, outfile)    
+        ###
+        """
+        with open(os.pathjoin(output_json_dir), 'w') as outfile:    
+            json.dump(dc, outfile) 
+        """       
+        ###
 
         return npimg
 
