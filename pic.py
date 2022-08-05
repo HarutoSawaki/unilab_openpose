@@ -21,19 +21,19 @@ def save_frame_camera_key(device_num, dir_path, basename, ext='jpg', delay=1, wi
         cv2.imshow(window_name, frame)
         key = cv2.waitKey(delay) & 0xFF
         if key == ord('1'):
-            cv2.imwrite('{}_{}.{}'.format(paths[0], count[0], ext), frame)
+            cv2.imwrite('{}/pose1_{}.{}'.format(paths[0], count[0], ext), frame)
             count[0] += 1
         if key == ord('2'):
-            cv2.imwrite('{}_{}.{}'.format(paths[1], count[1], ext), frame)
+            cv2.imwrite('{}/pose2_{}.{}'.format(paths[1], count[1], ext), frame)
             count[1] += 1
         if key == ord('3'):
-            cv2.imwrite('{}_{}.{}'.format(paths[2], count[2], ext), frame)
+            cv2.imwrite('{}/pose3_{}.{}'.format(paths[2], count[2], ext), frame)
             count[2] += 1
         if key == ord('4'):
-            cv2.imwrite('{}_{}.{}'.format(paths[3], count[3], ext), frame)
+            cv2.imwrite('{}/pose4_{}.{}'.format(paths[3], count[3], ext), frame)
             count[3] += 1
         if key == ord('5'):
-            cv2.imwrite('{}_{}.{}'.format(paths[4], count[4], ext), frame)
+            cv2.imwrite('{}/pose5_{}.{}'.format(paths[4], count[4], ext), frame)
             count[4] += 1
         elif key == ord('q'):
             break
