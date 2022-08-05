@@ -9,13 +9,13 @@ def save_frame_camera_key(device_num, dir_path, basename, ext='jpg', delay=1, wi
 
     os.makedirs(dir_path, exist_ok=True)
     # base_path = os.path.join(dir_path)
-    paths = ["", "", "", ""]
-    for num in range(4):
+    paths = ["", "", "", "", ""]
+    for num in range(5):
         paths[num] = os.path.join(dir_path, "pose"+str(num))
         os.makedirs(paths[num], exist_ok=True)
 
     n = 0
-    count = [0, 0, 0, 0]
+    count = [0, 0, 0, 0, 0]
     while True:
         ret, frame = cap.read()
         cv2.imshow(window_name, frame)
@@ -32,6 +32,9 @@ def save_frame_camera_key(device_num, dir_path, basename, ext='jpg', delay=1, wi
         if key == ord('4'):
             cv2.imwrite('{}_{}.{}'.format(paths[3], count[3], ext), frame)
             count[3] += 1
+        if key == ord('5'):
+            cv2.imwrite('{}_{}.{}'.format(paths[4], count[4], ext), frame)
+            count[4] += 1
         elif key == ord('q'):
             break
 
