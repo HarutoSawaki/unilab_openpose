@@ -11,7 +11,7 @@ def save_frame_camera_key(device_num, dir_path, basename, ext='jpg', delay=1, wi
     # base_path = os.path.join(dir_path)
     paths = ["", "", "", "", ""]
     for num in range(5):
-        paths[num] = os.path.join(dir_path, "pose"+str(num))
+        paths[num] = os.path.join(dir_path, "pose"+str(num+1))
         os.makedirs(paths[num], exist_ok=True)
 
     n = 0
